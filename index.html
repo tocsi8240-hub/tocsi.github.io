@@ -244,7 +244,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:26px 22px calc
     <h2>Projects</h2>
     <div class="proj">
       <div class="ico" aria-hidden="true">KBC</div>
-      <div><h3>KBC: Brain Teasers</h3><p>A Kaun Banega Crorepati style game with 5 Amazon-interview type puzzles. Type your answer, lock it, and try to win ₹1 Crore.</p></div>
+      <div><h3>KBC: Brain Teasers</h3><p>A Kaun Banega Crorepati style game with 5 Amazon-interview type puzzles. Type your answer, lock it, and climb from Good to Mastermind.</p></div>
       <div class="cta"><button class="btn main" id="playbtn">Play now</button><button class="btn ghost" id="resbtn">Results</button></div>
     </div>
     <div class="empty">
@@ -264,7 +264,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:26px 22px calc
 <div class="kbc" id="kbc" role="dialog" aria-modal="true" aria-label="KBC Brain Teasers">
  <div class="kbc-top"><span>KBC: Brain Teasers</span><span class="tb"><button class="btn ghost sm" id="kres">Results</button><button class="x" id="kx" aria-label="Close game">✕</button></span></div>
  <div class="kbc-pane" id="name" hidden><h3>Welcome to KBC</h3><p>Enter your name to start. Your result will be saved with it.</p><div class="row"><input id="pname" type="text" maxlength="30" placeholder="Your name" autocomplete="off" aria-label="Your name"><button class="btn main" id="startb">Start game</button></div></div>
- <div class="kbc-pane" id="res" hidden><h3>Results</h3><div class="tw"><table><thead><tr><th>Rank</th><th>Name</th><th>Correct</th><th>Prize</th><th>Time</th></tr></thead><tbody id="rows"></tbody></table></div><p class="sm" id="rnote"></p><div class="row"><button class="btn ghost" id="rback">Back</button><button class="btn ghost" id="rclr">Clear results</button></div></div>
+ <div class="kbc-pane" id="res" hidden><h3>Results</h3><div class="tw"><table><thead><tr><th>Rank</th><th>Name</th><th>Correct</th><th>Level</th><th>Time</th></tr></thead><tbody id="rows"></tbody></table></div><p class="sm" id="rnote"></p><div class="row"><button class="btn ghost" id="rback">Back</button><button class="btn ghost" id="rclr">Clear results</button></div></div>
  <div class="kbc-in" id="game" hidden>
   <div>
    <div id="play">
@@ -299,18 +299,18 @@ footer{border-top:1px solid var(--line);text-align:center;padding:26px 22px calc
    {q:'Ek aadmi apni car dhakel kar ek hotel tak laata hai aur owner se kehta hai “main bankrupt ho gaya”. Phir wo car chhod ke chala jaata hai. Wo asal mein kya kar raha tha?',a:/monopoly|board game/i,h:'Ye ek mashhoor board game hai.',t:'Wo Monopoly khel raha tha. Car uska token thi aur hotel board ka ek square.'},
    {q:'Ek kamre ke bahar 3 switch hain aur andar 3 bulb. Tum kamre mein sirf ek baar ja sakte ho. Kaise pata karoge ki kaun sa switch kis bulb ka hai?',a:/warm|hot|garam|heat|gram/i,h:'Bulb sirf roshni nahi deta, kuch aur bhi karta hai.',t:'Pehla switch kuch der on rakho phir off karo. Doosra on karo aur kamre mein jao. Jalta bulb doosre ka, band par garam bulb pehle ka, aur band aur thanda bulb teesre ka.'}
   ];
-  var P=['₹1,000','₹10,000','₹1,00,000','₹10,00,000','₹1 Crore'],k=document.getElementById('kbc'),qi=0,busy=false;
+  var P=['Good','Better','Brilliant','Genius','Mastermind'],k=document.getElementById('kbc'),qi=0,busy=false;
   function g(id){return document.getElementById(id)}
   function show(){
     busy=false;g('lad').innerHTML=P.map(function(p,n){return '<li class="'+(n<qi?'done':n===qi?'now':'')+'">'+p+'</li>'}).reverse().join('');
-    g('qn').textContent=pn+' – Question '+(qi+1)+' of '+Q.length+' for '+P[qi];g('qt').textContent=Q[qi].q;
+    g('qn').textContent=pn+' – Question '+(qi+1)+' of '+Q.length+' (level: '+P[qi]+')';g('qt').textContent=Q[qi].q;
     g('hn').textContent='';g('ans').value='';g('fb').textContent='';g('fb').className='';
     g('hint').disabled=false;g('play').hidden=false;g('end').hidden=true;g('ans').focus();
   }
   function fin(win){
     g('play').hidden=true;g('end').hidden=false;
-    g('et').textContent=win?'Congratulations '+pn+', you are a crorepati!':'Wrong answer, '+pn;save(win);
-    g('ep').textContent=win?'You answered all 5 questions correctly and won ₹1 Crore.':'Explanation: '+Q[qi].t+' You take home: '+(qi>0?P[qi-1]:'₹0')+'.';
+    g('et').textContent=win?'Congratulations '+pn+', you are a Mastermind!':'Wrong answer, '+pn;save(win);
+    g('ep').textContent=win?'You answered all 5 questions correctly and reached the Mastermind level.':'Explanation: '+Q[qi].t+' Your level: '+(qi>0?P[qi-1]:'Beginner')+'.';
   }
   function lock(){
     var v=g('ans').value.trim();if(!v||busy)return;busy=true;var f=g('fb');
@@ -335,7 +335,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:26px 22px calc
   var pn='',KEY='tocsi-kbc-results';
   function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
   function save(win){
-    var o={n:pn,c:win?Q.length:qi,p:win?P[Q.length-1]:(qi>0?P[qi-1]:'₹0'),t:Date.now()},r=load();last=o;r.push(o);
+    var o={n:pn,c:win?Q.length:qi,p:win?P[Q.length-1]:(qi>0?P[qi-1]:'Beginner'),t:Date.now()},r=load();last=o;r.push(o);
     try{localStorage.setItem(KEY,JSON.stringify(r))}catch(e){}
     if(remote()){fetch(furl(),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:{n:{stringValue:o.n},c:{integerValue:String(o.c)},p:{stringValue:o.p},t:{integerValue:String(o.t)}}})}).catch(function(){})}
   }
@@ -352,7 +352,7 @@ footer{border-top:1px solid var(--line);text-align:center;padding:26px 22px calc
   g('startb').addEventListener('click',start);g('pname').addEventListener('keydown',function(e){if(e.key==='Enter')start()});
   g('resbtn').addEventListener('click',showRes);g('kres').addEventListener('click',showRes);g('rback').addEventListener('click',function(){pane('name')});
   g('rclr').addEventListener('click',function(){if(confirm('Clear all saved results?')){try{localStorage.removeItem(KEY)}catch(e){}board()}});
-  g('wab').addEventListener('click',function(){if(!last)return;var m='KBC Brain Teasers result\nName: '+last.n+'\nCorrect: '+last.c+'/'+Q.length+'\nPrize: '+last.p;window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(m),'_blank','noopener')});
+  g('wab').addEventListener('click',function(){if(!last)return;var m='KBC Brain Teasers result\nName: '+last.n+'\nCorrect: '+last.c+'/'+Q.length+'\nLevel: '+last.p;window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(m),'_blank','noopener')});
   var nav=document.querySelector('nav'),bg=document.getElementById('burger');
   function menu(o){nav.classList.toggle('open',o);bg.setAttribute('aria-expanded',o);bg.setAttribute('aria-label',o?'Close menu':'Open menu')}
   bg.addEventListener('click',function(){menu(!nav.classList.contains('open'))});
